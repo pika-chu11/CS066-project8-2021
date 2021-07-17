@@ -1,0 +1,90 @@
+TITLE project8
+; Xuying He
+; 1. The number of instructions in the integer part is (32).
+; 2. The number of instructions in the floating part is (27).
+; 3. The total number of instructiosn in part 1 and part 2 is (59).	
+; prompts the user for two integers and two real numbers
+; and outputs the sum, difference, product, quotient and remainder of the the two.
+
+INCLUDE Irvine32.inc
+INCLUDE macros.inc
+
+.data
+sum SDWORD ?			; the sum of the numbers
+diff SDWORD ?			; the difference of the numbers
+mlt SDWORD ?			; the product of the numbers
+quot SDWORD ?			; the quotient of the numbers
+rem SDWORD ?			; the reminder of the numbers
+
+fval REAL4 ?			; first real nubmer
+fval2 REAL4 ?			; second real number
+
+.code
+main PROC
+	mWrite "Please enter two integers: "
+    call ReadInt
+	mov diff, eax			;store the first into diff
+	mov ebx,eax				;store the first into EBX
+	add sum, eax			;add eax to the sum
+
+	call ReadInt
+	add sum, eax			; add eax(2nd number) to the sum
+	imul ebx,eax			; mulitpy both number
+	mov mlt,ebx				; store the product into mlt
+
+	mov ebx,eax				; store the 2nd number into EBX
+	mov eax,diff			; store the 1st number into EAX
+	cdq						; Extends the sign bit in EAX throughout the EDX register	
+	idiv ebx				; divide the 1st number by 2nd number
+	mov quot, eax			; store the quotient into quot
+	mov rem, edx			; store the reminder into rem
+
+	sub diff, ebx			; sub the 2nd number from 1st number
+
+					
+	mov eax,sum				; PRINT THE RESULT
+	mWrite "Sum is  "
+	call WriteInt
+	mov eax,diff
+	mWrite "  Difference is  "
+	call WriteInt
+	mWrite "  Product is "
+	mov eax,mlt
+	call WriteInt
+	mWrite "  Quotient is "
+	mov eax,quot
+	call WriteInt
+	mWrite "  Reminder is "
+	mov eax,rem
+	call WriteInt
+
+	call Crlf
+	mWrite "Please enter two reals: "
+	call ReadFloat		; number store in the ST(0)
+	fst fval			; store the 1st variable, then pop
+	call ReadFloat		
+	fst fval2			; store the 2nd variable
+	fadd ST(0),ST(1)	; add up the two number into ST(0)
+
+	mWrite "Sum is  "
+	call WriteFloat		; display the sum in ST(0)
+	fstp st(0)			; pop ST(0)
+	fld fval2			; push the 2nd variable into the stack
+	fsubp ST(1),ST(0)	; subtract the 2nd number from the first number 
+	mWrite "  Difference is "
+	call WriteFloat		; display the difference in ST(0)
+	fstp st(0)			; pop ST(0)
+
+	fld fval			; push the 1st variable into the stack
+	fld fval2			; push the 2nd variable into the stack
+	fmul ST(0),ST(1)	; multiply two numbers together
+	mWrite "  Product is "
+	call WriteFloat		; display the product in ST(0)
+	fstp st(0)			; pop ST(0)
+	fld fval2			; push the 2nd variable into the stack
+	fdiv				; div the 2nd varable(ST(0)) from the 1st variable(ST(1)), then pop
+	mWrite "  Quotient is "
+	call WriteFloat		; display the quotient in ST(0)
+	exit
+main ENDP
+END main
