@@ -1,5 +1,4 @@
 TITLE project8
-; Xuying He
 ; 1. The number of instructions in the integer part is (32).
 ; 2. The number of instructions in the floating part is (27).
 ; 3. The total number of instructiosn in part 1 and part 2 is (59).	
